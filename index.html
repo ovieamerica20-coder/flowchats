@@ -1,1248 +1,661 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<meta name="description"
-      content="FlowChat - Professional live chat for modern businesses.">
-
-<title>FlowChat — Live Chat Made Simple</title>
-
-<!-- Tailwind -->
-<script src="https://cdn.tailwindcss.com"></script>
-
-<!-- Google Font -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet">
-
-<!-- Lucide Icons -->
-<script src="https://unpkg.com/lucide@latest"></script>
-
-<script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FlowChat — Every conversation flows better</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
     tailwind.config = {
-        theme: {
-            extend: {
-                fontFamily: {
-                    sans: ['Inter', 'sans-serif']
-                },
-
-                animation: {
-                    float: 'float 6s ease-in-out infinite',
-                    floatSlow: 'float 9s ease-in-out infinite',
-                    typing: 'typing 1.4s infinite',
-                    gradient: 'gradient 8s ease infinite',
-                    chatOpen: 'chatOpen .35s cubic-bezier(.16,1,.3,1) forwards',
-                    messageIn: 'messageIn .35s ease forwards',
-                    fadeIn: 'fadeIn .4s ease forwards'
-                },
-
-                keyframes: {
-                    float: {
-                        '0%, 100%': {
-                            transform: 'translateY(0)'
-                        },
-                        '50%': {
-                            transform: 'translateY(-16px)'
-                        }
-                    },
-
-                    typing: {
-                        '0%, 100%': {
-                            opacity: '.3',
-                            transform: 'translateY(0)'
-                        },
-                        '50%': {
-                            opacity: '1',
-                            transform: 'translateY(-3px)'
-                        }
-                    },
-
-                    gradient: {
-                        '0%, 100%': {
-                            backgroundPosition: '0% 50%'
-                        },
-                        '50%': {
-                            backgroundPosition: '100% 50%'
-                        }
-                    },
-
-                    chatOpen: {
-                        '0%': {
-                            opacity: '0',
-                            transform: 'translateY(30px) scale(.94)'
-                        },
-                        '100%': {
-                            opacity: '1',
-                            transform: 'translateY(0) scale(1)'
-                        }
-                    },
-
-                    messageIn: {
-                        '0%': {
-                            opacity: '0',
-                            transform: 'translateY(12px)'
-                        },
-                        '100%': {
-                            opacity: '1',
-                            transform: 'translateY(0)'
-                        }
-                    },
-
-                    fadeIn: {
-                        '0%': {
-                            opacity: '0'
-                        },
-                        '100%': {
-                            opacity: '1'
-                        }
-                    }
-                }
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui'] },
+          animation: {
+            float: 'float 6s ease-in-out infinite',
+            'float-slow': 'float 9s ease-in-out infinite',
+            'fade-up': 'fadeUp .8s ease both',
+            'pulse-soft': 'pulseSoft 2.5s ease-in-out infinite',
+            'gradient': 'gradient 8s ease infinite'
+          },
+          keyframes: {
+            float: {
+              '0%,100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-12px)' }
+            },
+            fadeUp: {
+              from: { opacity: '0', transform: 'translateY(28px)' },
+              to: { opacity: '1', transform: 'translateY(0)' }
+            },
+            pulseSoft: {
+              '0%,100%': { transform: 'scale(1)', opacity: '.8' },
+              '50%': { transform: 'scale(1.08)', opacity: '1' }
+            },
+            gradient: {
+              '0%,100%': { backgroundPosition: '0% 50%' },
+              '50%': { backgroundPosition: '100% 50%' }
             }
+          }
         }
-    };
-</script>
-
-<style>
-
-    html {
-        scroll-behavior: smooth;
+      }
     }
-
-    body {
-        font-family: 'Inter', sans-serif;
-        background: #050b14;
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    html { scroll-behavior:smooth; }
+    body { overflow-x:hidden; }
+    .hero-gradient {
+      background: linear-gradient(120deg,#eef2ff,#ffffff,#ecfeff,#f5f3ff);
+      background-size: 300% 300%;
     }
-
-    .hero-bg {
-        background:
-            radial-gradient(circle at 20% 20%, rgba(14,165,233,.15), transparent 35%),
-            radial-gradient(circle at 80% 30%, rgba(99,102,241,.12), transparent 30%),
-            radial-gradient(circle at 50% 90%, rgba(14,165,233,.08), transparent 35%);
+    .grid-bg {
+      background-image: linear-gradient(rgba(99,102,241,.07) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(99,102,241,.07) 1px, transparent 1px);
+      background-size: 42px 42px;
     }
-
-    .glass {
-        background: rgba(255,255,255,.045);
-        border: 1px solid rgba(255,255,255,.08);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
+    .glass { background:rgba(255,255,255,.72); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); }
+    .shadow-soft { box-shadow:0 25px 80px rgba(15,23,42,.12); }
+    .shadow-card { box-shadow:0 12px 40px rgba(15,23,42,.08); }
+    .reveal { opacity:0; transform:translateY(28px); transition:opacity .8s ease, transform .8s ease; }
+    .reveal.show { opacity:1; transform:translateY(0); }
+    .typing span { animation: blink 1.2s infinite; }
+    .typing span:nth-child(2){ animation-delay:.15s; }
+    .typing span:nth-child(3){ animation-delay:.3s; }
+    @keyframes blink { 0%,80%,100%{opacity:.25} 40%{opacity:1} }
+    @media (prefers-reduced-motion: reduce) {
+      *,*::before,*::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; scroll-behavior:auto !important; transition-duration:.01ms !important; }
     }
-
-    .blue-glow {
-        box-shadow:
-            0 0 50px rgba(14,165,233,.12),
-            0 30px 90px rgba(0,0,0,.4);
-    }
-
-    .mobile-menu {
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height .35s ease;
-    }
-
-    .mobile-menu.open {
-        max-height: 400px;
-    }
-
-    .chat-widget {
-        display: none;
-    }
-
-    .chat-widget.show {
-        display: flex;
-        animation: chatOpen .35s cubic-bezier(.16,1,.3,1) forwards;
-    }
-
-    .message-enter {
-        animation: messageIn .35s ease forwards;
-    }
-
-    .chat-scroll::-webkit-scrollbar {
-        width: 4px;
-    }
-
-    .chat-scroll::-webkit-scrollbar-thumb {
-        background: rgba(148,163,184,.3);
-        border-radius: 20px;
-    }
-
-    @media (max-width: 640px) {
-
-        .chat-widget.show {
-            position: fixed;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            border-radius: 0;
-            z-index: 100;
-        }
-
-    }
-
-</style>
-
+  </style>
 </head>
 
-<body class="text-white overflow-x-hidden">
+<body class="bg-white text-slate-900 antialiased">
 
-<!-- ================= NAVIGATION ================= -->
-
-<header class="fixed top-0 left-0 right-0 z-40 border-b border-white/5 bg-[#050b14]/80 backdrop-blur-xl">
-
-
-<div class="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10">
-
-    <div class="h-20 flex items-center justify-between">
-
-        <a href="#" class="flex items-center gap-3">
-
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-400 to-blue-600 flex items-center justify-center shadow-lg shadow-sky-500/20">
-                <i data-lucide="message-circle" class="w-5 h-5"></i>
-            </div>
-
-            <div>
-                <div class="font-bold text-xl">
-                    Flow<span class="text-sky-400">Chat</span>
-                </div>
-
-                <div class="text-[10px] uppercase tracking-[.2em] text-slate-500">
-                    Live Support
-                </div>
-            </div>
-
+  <!-- NAV -->
+  <header class="fixed top-0 left-0 right-0 z-50">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-4">
+      <nav class="glass border border-slate-200/70 rounded-2xl shadow-card px-4 sm:px-6 py-3 flex items-center justify-between">
+        <a href="#" class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white grid place-items-center shadow-lg shadow-indigo-600/25">
+            <i data-lucide="messages-square" class="w-5 h-5"></i>
+          </div>
+          <span class="font-extrabold text-xl tracking-tight">FlowChat</span>
         </a>
 
-
-        <nav class="hidden md:flex items-center gap-8 text-sm text-slate-400">
-
-            <a href="#features" class="hover:text-white transition">
-                Features
-            </a>
-
-            <a href="#how" class="hover:text-white transition">
-                How it works
-            </a>
-
-            <a href="#about" class="hover:text-white transition">
-                About
-            </a>
-
-        </nav>
-
-
-        <div class="hidden md:flex items-center gap-3">
-
-            <button class="px-4 py-2.5 text-sm text-slate-300 hover:text-white transition">
-                Sign in
-            </button>
-
-            <button onclick="openChat()"
-                    class="px-5 py-2.5 rounded-xl bg-white text-slate-950 text-sm font-semibold hover:bg-sky-50 hover:-translate-y-0.5 transition">
-                Try Live Preview
-            </button>
-
+        <div class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
+          <a href="#features" class="hover:text-indigo-600 transition">Features</a>
+          <a href="#how-it-works" class="hover:text-indigo-600 transition">How it works</a>
+          <a href="#use-cases" class="hover:text-indigo-600 transition">Use cases</a>
+          <a href="#faq" class="hover:text-indigo-600 transition">FAQ</a>
         </div>
 
+        <div class="hidden sm:flex items-center gap-3">
+          <a href="login.php" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100 transition">Log in</a>
+          <a href="login.php" class="px-5 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 hover:-translate-y-0.5 transition shadow-lg shadow-indigo-600/20">Get Started</a>
+        </div>
 
-        <button id="menuButton"
-                class="md:hidden w-10 h-10 rounded-xl glass flex items-center justify-center">
-
-            <i data-lucide="menu" class="w-5 h-5"></i>
-
+        <button id="menuBtn" class="sm:hidden p-2 rounded-xl hover:bg-slate-100" aria-label="Open menu">
+          <i data-lucide="menu"></i>
         </button>
+      </nav>
 
-    </div>
-
-
-    <div id="mobileMenu" class="mobile-menu md:hidden">
-
-        <div class="pb-5 space-y-1">
-
-            <a href="#features" class="block px-4 py-3 rounded-xl text-slate-300">
-                Features
-            </a>
-
-            <a href="#how" class="block px-4 py-3 rounded-xl text-slate-300">
-                How it works
-            </a>
-
-            <a href="#about" class="block px-4 py-3 rounded-xl text-slate-300">
-                About
-            </a>
-
-            <button onclick="openChat()"
-                    class="w-full mt-2 px-4 py-3 rounded-xl bg-sky-500 text-center font-semibold">
-                Try Live Preview
-            </button>
-
+      <div id="mobileMenu" class="hidden mt-2 glass border border-slate-200 rounded-2xl p-4 shadow-card sm:hidden">
+        <div class="flex flex-col gap-2 text-sm font-medium">
+          <a href="#features" class="p-3 rounded-xl hover:bg-slate-100">Features</a>
+          <a href="#how-it-works" class="p-3 rounded-xl hover:bg-slate-100">How it works</a>
+          <a href="#use-cases" class="p-3 rounded-xl hover:bg-slate-100">Use cases</a>
+          <a href="#faq" class="p-3 rounded-xl hover:bg-slate-100">FAQ</a>
+          <a href="login.php" class="p-3 rounded-xl bg-indigo-600 text-white text-center">Get Started</a>
         </div>
-
+      </div>
     </div>
+  </header>
 
-</div>
+  <!-- HERO -->
+  <main>
+    <section class="relative min-h-screen pt-36 pb-20 hero-gradient animate-gradient overflow-hidden">
+      <div class="absolute inset-0 grid-bg opacity-60"></div>
+      <div class="absolute -top-40 -left-40 w-96 h-96 bg-indigo-400/20 rounded-full blur-3xl"></div>
+      <div class="absolute top-40 -right-40 w-96 h-96 bg-cyan-300/20 rounded-full blur-3xl"></div>
 
-
-</header>
-
-<!-- ================= HERO ================= -->
-
-<section class="relative min-h-screen flex items-center pt-32 pb-20 hero-bg overflow-hidden">
-
-
-<div class="absolute top-32 left-[8%] w-72 h-72 bg-sky-500/10 rounded-full blur-3xl animate-float"></div>
-
-<div class="absolute bottom-10 right-[5%] w-80 h-80 bg-blue-600/10 rounded-full blur-3xl animate-floatSlow"></div>
-
-
-<div class="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 w-full">
-
-    <div class="grid lg:grid-cols-2 gap-14 lg:gap-20 items-center">
-
-
-        <!-- HERO TEXT -->
-
-        <div class="text-center lg:text-left">
-
-            <div class="inline-flex items-center gap-2 px-3 py-2 rounded-full border border-sky-400/20 bg-sky-400/5 text-sky-300 text-xs font-medium mb-7">
-
-                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-
-                Your customers are waiting
-
+      <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid lg:grid-cols-2 gap-14 items-center">
+          <div class="reveal">
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/80 border border-indigo-100 text-indigo-700 text-sm font-semibold shadow-sm mb-6">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              Modern live chat for growing teams
             </div>
 
-
-            <h1 class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold tracking-tight leading-[1.05]">
-
-                Conversations
-
-                <span class="block mt-2 bg-gradient-to-r from-sky-300 via-blue-400 to-indigo-400 bg-clip-text text-transparent bg-[length:200%_200%] animate-gradient">
-
-                    that move business.
-
-                </span>
-
+            <h1 class="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.02]">
+              Turn visitors into
+              <span class="block text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-violet-600 to-cyan-500">real conversations.</span>
             </h1>
 
-
-            <p class="mt-7 max-w-xl mx-auto lg:mx-0 text-base sm:text-lg leading-8 text-slate-400">
-
-                Connect with your customers in real time.
-                FlowChat gives your team a simple, beautiful
-                and powerful way to communicate with visitors.
-
+            <p class="mt-6 text-lg sm:text-xl leading-8 text-slate-600 max-w-xl">
+              Give your visitors a fast, friendly way to reach your team. FlowChat brings live conversations, notifications and customer context into one simple experience.
             </p>
 
-
-            <div class="mt-9 flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
-
-                <button onclick="openChat()"
-                        class="group px-6 py-3.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-white font-semibold flex items-center justify-center gap-2 shadow-xl shadow-sky-500/20 hover:-translate-y-1 transition duration-300">
-
-                    Try Live Preview
-
-                    <i data-lucide="arrow-right"
-                       class="w-4 h-4 group-hover:translate-x-1 transition"></i>
-
-                </button>
-
-
-                <a href="#features"
-                   class="px-6 py-3.5 rounded-xl border border-white/10 bg-white/[.03] hover:bg-white/[.07] text-slate-200 font-semibold flex items-center justify-center transition">
-
-                    Explore FlowChat
-
-                </a>
-
+            <div class="mt-8 flex flex-col sm:flex-row gap-3">
+              <a href="login.php" class="group inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-indigo-600 text-white font-semibold hover:bg-indigo-700 hover:-translate-y-1 transition shadow-xl shadow-indigo-600/20">
+                Get Started
+                <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-1 transition"></i>
+              </a>
+              <button onclick="openLiveChat()" class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-white border border-slate-200 text-slate-800 font-semibold hover:border-indigo-200 hover:bg-indigo-50 transition">
+                <i data-lucide="play" class="w-4 h-4"></i>
+                Try Live Preview
+              </button>
             </div>
 
-        </div>
+            <div class="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm text-slate-500">
+              <span class="flex items-center gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i> Responsive by design</span>
+              <span class="flex items-center gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i> Simple team workflow</span>
+              <span class="flex items-center gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i> Built for the web</span>
+            </div>
+          </div>
 
+          <!-- HERO PRODUCT PREVIEW -->
+          <div class="relative reveal" style="transition-delay:.15s">
+            <div class="absolute -top-8 -right-3 sm:right-6 glass border border-white rounded-2xl shadow-soft p-4 animate-float z-20">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 grid place-items-center">
+                  <i data-lucide="bell-ring" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <p class="text-xs text-slate-500">New conversation</p>
+                  <p class="font-semibold text-sm">Visitor needs help</p>
+                </div>
+              </div>
+            </div>
 
-
-        <!-- HERO CHAT MOCKUP -->
-
-        <div class="flex justify-center lg:justify-end">
-
-            <div class="w-full max-w-[440px] rounded-3xl overflow-hidden glass blue-glow animate-float">
-
-
-                <div class="p-5 border-b border-white/10 flex items-center gap-3">
-
-                    <div class="relative">
-
-                        <div class="w-11 h-11 rounded-full bg-gradient-to-br from-sky-400 to-blue-600 flex items-center justify-center font-bold">
-                            FC
-                        </div>
-
-                        <span class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-400 border-2 border-[#101a29] rounded-full"></span>
-
-                    </div>
-
-                    <div>
-
-                        <div class="font-semibold">
-                            FlowChat Support
-                        </div>
-
-                        <div class="text-xs text-emerald-400">
-                            Online now
-                        </div>
-
-                    </div>
-
+            <div class="bg-slate-950 rounded-[28px] p-2 shadow-soft border border-white/20">
+              <div class="bg-slate-900 rounded-[22px] overflow-hidden">
+                <div class="h-10 px-4 flex items-center gap-2 border-b border-white/10">
+                  <span class="w-2.5 h-2.5 rounded-full bg-red-400"></span>
+                  <span class="w-2.5 h-2.5 rounded-full bg-yellow-400"></span>
+                  <span class="w-2.5 h-2.5 rounded-full bg-green-400"></span>
+                  <div class="ml-3 h-5 flex-1 rounded-full bg-white/5"></div>
                 </div>
 
+                <div class="p-5 sm:p-7 min-h-[450px] relative bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950">
+                  <div class="max-w-sm">
+                    <div class="text-white/50 text-xs uppercase tracking-[.2em]">FlowChat dashboard</div>
+                    <div class="mt-3 text-2xl font-bold text-white">Conversations</div>
 
-                <div class="p-5 space-y-5 min-h-[300px]">
-
-                    <div class="flex gap-3">
-
-                        <div class="w-8 h-8 rounded-full bg-sky-500 flex items-center justify-center text-[10px] font-bold shrink-0">
-                            FC
+                    <div class="mt-6 space-y-3">
+                      <div class="bg-white/10 border border-white/10 rounded-2xl p-4 backdrop-blur">
+                        <div class="flex items-center justify-between">
+                          <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-full bg-indigo-500/30 grid place-items-center text-indigo-200 font-bold">A</div>
+                            <div>
+                              <p class="text-sm font-semibold text-white">Alex Morgan</p>
+                              <p class="text-xs text-white/50">Just now</p>
+                            </div>
+                          </div>
+                          <span class="w-2.5 h-2.5 bg-emerald-400 rounded-full animate-pulse"></span>
                         </div>
+                        <p class="mt-3 text-sm text-white/70">Hi, I need help with my order...</p>
+                      </div>
 
-                        <div class="bg-white/[.07] rounded-2xl rounded-tl-md px-4 py-3 text-sm max-w-[260px]">
-
-                            Hi there! 👋<br>
-                            How can we help you today?
-
+                      <div class="bg-white/5 border border-white/10 rounded-2xl p-4">
+                        <div class="flex items-center gap-3">
+                          <div class="w-9 h-9 rounded-full bg-cyan-500/20 grid place-items-center text-cyan-200 font-bold">S</div>
+                          <div>
+                            <p class="text-sm font-semibold text-white">Sarah Wilson</p>
+                            <p class="text-xs text-white/40">2 min ago</p>
+                          </div>
                         </div>
-
+                        <p class="mt-3 text-sm text-white/50">Thanks for the quick response!</p>
+                      </div>
                     </div>
+                  </div>
 
-
-                    <div class="flex justify-end">
-
-                        <div class="bg-sky-500 rounded-2xl rounded-tr-md px-4 py-3 text-sm max-w-[260px]">
-
-                            I have a question about your service.
-
+                  <div class="absolute bottom-5 right-5 w-64 sm:w-72 bg-white rounded-2xl shadow-2xl overflow-hidden animate-float-slow">
+                    <div class="px-4 py-3 bg-indigo-600 text-white">
+                      <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                          <div class="w-8 h-8 rounded-full bg-white/15 grid place-items-center">
+                            <i data-lucide="messages-square" class="w-4 h-4"></i>
+                          </div>
+                          <div>
+                            <p class="text-sm font-bold">FlowChat Support</p>
+                            <p class="text-[10px] text-indigo-100 flex items-center gap-1"><span class="w-1.5 h-1.5 bg-emerald-300 rounded-full"></span> Online now</p>
+                          </div>
                         </div>
-
+                        <i data-lucide="more-horizontal" class="w-4 h-4"></i>
+                      </div>
                     </div>
-
-
-                    <div class="flex gap-3">
-
-                        <div class="w-8 h-8 rounded-full bg-sky-500 flex items-center justify-center text-[10px] font-bold shrink-0">
-                            FC
-                        </div>
-
-                        <div class="bg-white/[.07] rounded-2xl rounded-tl-md px-4 py-3 text-sm">
-
-                            Great! I'm here to help.
-
-                        </div>
-
+                    <div class="p-3 bg-slate-50 space-y-2">
+                      <div class="max-w-[85%] bg-white border border-slate-200 rounded-2xl rounded-tl-md px-3 py-2 text-xs text-slate-600">
+                        Hi! How can we help you today?
+                      </div>
+                      <div class="ml-auto max-w-[75%] bg-indigo-600 text-white rounded-2xl rounded-tr-md px-3 py-2 text-xs">
+                        I have a question.
+                      </div>
                     </div>
-
+                    <div class="px-3 py-2 border-t flex items-center gap-2">
+                      <div class="flex-1 h-8 rounded-lg bg-slate-100"></div>
+                      <div class="w-8 h-8 rounded-lg bg-indigo-600"></div>
+                    </div>
+                  </div>
                 </div>
+              </div>
+            </div>
 
-
-                <div class="p-4 border-t border-white/10">
-
-                    <button onclick="openChat()"
-                            class="w-full py-3 rounded-xl bg-sky-500 hover:bg-sky-400 font-semibold transition">
-
-                        Open Live Preview
-
-                    </button>
-
+            <div class="absolute -bottom-8 -left-5 glass border border-white rounded-2xl shadow-soft p-4 animate-float-slow">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 grid place-items-center">
+                  <i data-lucide="users" class="w-5 h-5"></i>
                 </div>
+                <div>
+                  <p class="text-xs text-slate-500">Team inbox</p>
+                  <p class="font-semibold text-sm">Everyone stays in sync</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
+    <!-- TRUST / VALUE -->
+    <section class="py-14 border-b border-slate-100 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <p class="text-center text-sm font-semibold text-slate-400 uppercase tracking-[.18em]">Everything your support experience needs</p>
+        <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="text-center p-5 rounded-2xl bg-slate-50 hover:-translate-y-1 transition">
+            <div class="text-3xl font-extrabold">24/7</div>
+            <div class="mt-1 text-sm text-slate-500">Visitor access</div>
+          </div>
+          <div class="text-center p-5 rounded-2xl bg-slate-50 hover:-translate-y-1 transition">
+            <div class="text-3xl font-extrabold">&lt; 1</div>
+            <div class="mt-1 text-sm text-slate-500">Simple inbox</div>
+          </div>
+          <div class="text-center p-5 rounded-2xl bg-slate-50 hover:-translate-y-1 transition">
+            <div class="text-3xl font-extrabold">100%</div>
+            <div class="mt-1 text-sm text-slate-500">Responsive UI</div>
+          </div>
+          <div class="text-center p-5 rounded-2xl bg-slate-50 hover:-translate-y-1 transition">
+            <div class="text-3xl font-extrabold">1:1</div>
+            <div class="mt-1 text-sm text-slate-500">Human conversations</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section id="features" class="py-24 bg-slate-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-2xl reveal">
+          <span class="text-sm font-bold text-indigo-600 uppercase tracking-wider">Powerful, without the clutter</span>
+          <h2 class="mt-3 text-4xl sm:text-5xl font-extrabold tracking-tight">A better way to talk to your customers.</h2>
+          <p class="mt-5 text-lg text-slate-600">FlowChat keeps the important parts of live support close at hand, while giving your visitors a clean and familiar chat experience.</p>
+        </div>
+
+        <div class="mt-12 grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div class="reveal bg-white rounded-3xl p-7 shadow-card hover:-translate-y-2 transition">
+            <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 grid place-items-center"><i data-lucide="message-circle"></i></div>
+            <h3 class="mt-5 text-xl font-bold">Live conversations</h3>
+            <p class="mt-2 text-slate-500 leading-7">Give visitors a direct line to your team with a polished chat experience.</p>
+          </div>
+          <div class="reveal bg-white rounded-3xl p-7 shadow-card hover:-translate-y-2 transition">
+            <div class="w-12 h-12 rounded-2xl bg-cyan-50 text-cyan-600 grid place-items-center"><i data-lucide="inbox"></i></div>
+            <h3 class="mt-5 text-xl font-bold">Shared inbox</h3>
+            <p class="mt-2 text-slate-500 leading-7">Keep conversations organized so your team can see what needs attention.</p>
+          </div>
+          <div class="reveal bg-white rounded-3xl p-7 shadow-card hover:-translate-y-2 transition">
+            <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 grid place-items-center"><i data-lucide="bell-ring"></i></div>
+            <h3 class="mt-5 text-xl font-bold">Instant notifications</h3>
+            <p class="mt-2 text-slate-500 leading-7">Make new conversations and replies hard to miss with clear notification states.</p>
+          </div>
+          <div class="reveal bg-white rounded-3xl p-7 shadow-card hover:-translate-y-2 transition">
+            <div class="w-12 h-12 rounded-2xl bg-violet-50 text-violet-600 grid place-items-center"><i data-lucide="user-round"></i></div>
+            <h3 class="mt-5 text-xl font-bold">Visitor context</h3>
+            <p class="mt-2 text-slate-500 leading-7">Present useful visitor information alongside the conversation for better support.</p>
+          </div>
+          <div class="reveal bg-white rounded-3xl p-7 shadow-card hover:-translate-y-2 transition">
+            <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 grid place-items-center"><i data-lucide="smile"></i></div>
+            <h3 class="mt-5 text-xl font-bold">Friendly composer</h3>
+            <p class="mt-2 text-slate-500 leading-7">Emoji, attachments, keyboard sending and a familiar message composer.</p>
+          </div>
+          <div class="reveal bg-white rounded-3xl p-7 shadow-card hover:-translate-y-2 transition">
+            <div class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 grid place-items-center"><i data-lucide="smartphone"></i></div>
+            <h3 class="mt-5 text-xl font-bold">Works everywhere</h3>
+            <p class="mt-2 text-slate-500 leading-7">Designed to feel natural on desktop, tablet and mobile screens.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRODUCT SHOWCASE -->
+    <section class="py-24 bg-white overflow-hidden">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid lg:grid-cols-2 gap-16 items-center">
+          <div class="reveal">
+            <span class="text-sm font-bold text-indigo-600 uppercase tracking-wider">One conversation at a time</span>
+            <h2 class="mt-3 text-4xl sm:text-5xl font-extrabold tracking-tight">Make every visitor feel heard.</h2>
+            <p class="mt-5 text-lg text-slate-600 leading-8">From the first hello to the final answer, FlowChat is built around a simple idea: conversations should feel effortless.</p>
+
+            <div class="mt-8 space-y-5">
+              <div class="flex gap-4">
+                <div class="mt-1 w-10 h-10 shrink-0 rounded-xl bg-indigo-50 text-indigo-600 grid place-items-center"><i data-lucide="check"></i></div>
+                <div><h3 class="font-bold">Clear conversation states</h3><p class="mt-1 text-slate-500">Online, typing and message states help visitors understand what is happening.</p></div>
+              </div>
+              <div class="flex gap-4">
+                <div class="mt-1 w-10 h-10 shrink-0 rounded-xl bg-cyan-50 text-cyan-600 grid place-items-center"><i data-lucide="check"></i></div>
+                <div><h3 class="font-bold">Fast team handoff</h3><p class="mt-1 text-slate-500">Keep the conversation visible so the right person can continue helping.</p></div>
+              </div>
+              <div class="flex gap-4">
+                <div class="mt-1 w-10 h-10 shrink-0 rounded-xl bg-emerald-50 text-emerald-600 grid place-items-center"><i data-lucide="check"></i></div>
+                <div><h3 class="font-bold">A polished customer experience</h3><p class="mt-1 text-slate-500">Professional details without making the interface feel complicated.</p></div>
+              </div>
             </div>
 
-        </div>
+            <a href="login.php" class="mt-9 inline-flex items-center gap-2 font-bold text-indigo-600 hover:gap-3 transition">Get started <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+          </div>
 
-    </div>
-
-</div>
-
-
-</section>
-
-<!-- ================= FEATURES ================= -->
-
-<section id="features" class="py-24 sm:py-32">
-
-
-<div class="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10">
-
-    <div class="max-w-2xl mx-auto text-center mb-16">
-
-        <div class="text-sky-400 text-sm font-semibold uppercase tracking-widest mb-3">
-            Powerful features
-        </div>
-
-        <h2 class="text-3xl sm:text-4xl font-bold">
-            Everything your team needs to talk to customers.
-        </h2>
-
-        <p class="mt-5 text-slate-400 leading-7">
-            A clean and powerful live chat experience designed
-            for both businesses and customers.
-        </p>
-
-    </div>
-
-
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-
-        <div class="glass rounded-2xl p-7 hover:-translate-y-2 hover:border-sky-400/20 transition duration-500">
-
-            <div class="w-12 h-12 rounded-xl bg-sky-500/10 flex items-center justify-center mb-6">
-                <i data-lucide="message-circle" class="text-sky-400"></i>
+          <div class="reveal relative" style="transition-delay:.12s">
+            <div class="absolute -inset-10 bg-indigo-100/60 rounded-full blur-3xl"></div>
+            <div class="relative bg-slate-950 rounded-[30px] p-2 shadow-soft">
+              <div class="bg-white rounded-[24px] overflow-hidden">
+                <div class="px-5 py-4 border-b flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-indigo-600 text-white grid place-items-center"><i data-lucide="messages-square" class="w-4 h-4"></i></div>
+                    <div><p class="font-bold text-sm">Customer conversation</p><p class="text-xs text-emerald-600">● Active now</p></div>
+                  </div>
+                  <div class="flex gap-2"><button class="w-9 h-9 rounded-lg bg-slate-100 grid place-items-center"><i data-lucide="phone" class="w-4 h-4"></i></button><button class="w-9 h-9 rounded-lg bg-slate-100 grid place-items-center"><i data-lucide="more-horizontal" class="w-4 h-4"></i></button></div>
+                </div>
+                <div class="p-5 sm:p-7 bg-slate-50 min-h-[390px]">
+                  <div class="text-center text-xs text-slate-400 mb-5">Today</div>
+                  <div class="max-w-xs bg-white border rounded-2xl rounded-tl-md p-4 shadow-sm">
+                    <p class="text-sm text-slate-600">Hello! I have a question about your service.</p>
+                    <p class="mt-2 text-[10px] text-slate-400">10:42 AM</p>
+                  </div>
+                  <div class="ml-auto mt-4 max-w-xs bg-indigo-600 text-white rounded-2xl rounded-tr-md p-4">
+                    <p class="text-sm">Hi! We'd be happy to help. What would you like to know?</p>
+                    <p class="mt-2 text-[10px] text-indigo-100">10:43 AM ✓✓</p>
+                  </div>
+                  <div class="mt-4 flex items-center gap-2 text-xs text-slate-400">
+                    <div class="w-7 h-7 rounded-full bg-indigo-100 grid place-items-center text-indigo-600 font-bold">F</div>
+                    <div class="typing">FlowChat is typing <span>•</span><span>•</span><span>•</span></div>
+                  </div>
+                </div>
+                <div class="p-4 border-t flex items-center gap-2">
+                  <button class="w-10 h-10 rounded-xl bg-slate-100 grid place-items-center"><i data-lucide="paperclip" class="w-4 h-4"></i></button>
+                  <div class="flex-1 h-10 rounded-xl bg-slate-100"></div>
+                  <button class="w-10 h-10 rounded-xl bg-indigo-600 text-white grid place-items-center"><i data-lucide="send" class="w-4 h-4"></i></button>
+                </div>
+              </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-            <h3 class="text-lg font-semibold">
-                Real-time messaging
-            </h3>
-
-            <p class="mt-3 text-sm text-slate-500 leading-6">
-                Smooth conversations between customers and your support team.
-            </p>
-
+    <!-- HOW IT WORKS -->
+    <section id="how-it-works" class="py-24 bg-slate-950 text-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto reveal">
+          <span class="text-sm font-bold text-indigo-300 uppercase tracking-wider">How it works</span>
+          <h2 class="mt-3 text-4xl sm:text-5xl font-extrabold">Simple for you. Natural for visitors.</h2>
+          <p class="mt-5 text-slate-400 text-lg">Get your support experience moving without filling the screen with unnecessary complexity.</p>
         </div>
 
+        <div class="mt-14 grid md:grid-cols-3 gap-6">
+          <div class="reveal rounded-3xl border border-white/10 bg-white/5 p-7 hover:bg-white/10 transition">
+            <div class="w-12 h-12 rounded-2xl bg-white/10 grid place-items-center font-bold text-xl">01</div>
+            <h3 class="mt-6 text-xl font-bold">Create your account</h3>
+            <p class="mt-3 text-slate-400 leading-7">Start from the FlowChat login and set up your workspace.</p>
+          </div>
+          <div class="reveal rounded-3xl border border-white/10 bg-white/5 p-7 hover:bg-white/10 transition">
+            <div class="w-12 h-12 rounded-2xl bg-white/10 grid place-items-center font-bold text-xl">02</div>
+            <h3 class="mt-6 text-xl font-bold">Connect your chat</h3>
+            <p class="mt-3 text-slate-400 leading-7">Place your chat experience where your visitors can easily find it.</p>
+          </div>
+          <div class="reveal rounded-3xl border border-white/10 bg-white/5 p-7 hover:bg-white/10 transition">
+            <div class="w-12 h-12 rounded-2xl bg-white/10 grid place-items-center font-bold text-xl">03</div>
+            <h3 class="mt-6 text-xl font-bold">Start conversations</h3>
+            <p class="mt-3 text-slate-400 leading-7">Receive messages, respond from your team workflow and keep customers moving.</p>
+          </div>
+        </div>
+      </div>
+    </section>
 
-        <div class="glass rounded-2xl p-7 hover:-translate-y-2 hover:border-sky-400/20 transition duration-500">
-
-            <div class="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center mb-6">
-                <i data-lucide="bell" class="text-emerald-400"></i>
-            </div>
-
-            <h3 class="text-lg font-semibold">
-                Smart notifications
-            </h3>
-
-            <p class="mt-3 text-sm text-slate-500 leading-6">
-                Get notified whenever a customer starts a conversation.
-            </p>
-
+    <!-- USE CASES -->
+    <section id="use-cases" class="py-24 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto reveal">
+          <span class="text-sm font-bold text-indigo-600 uppercase tracking-wider">Built for real conversations</span>
+          <h2 class="mt-3 text-4xl sm:text-5xl font-extrabold tracking-tight">One platform, many customer moments.</h2>
         </div>
 
+        <div class="mt-12 grid lg:grid-cols-3 gap-6">
+          <div class="group reveal rounded-3xl border border-slate-200 p-8 hover:border-indigo-200 hover:shadow-card transition">
+            <div class="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-600 grid place-items-center group-hover:scale-110 transition"><i data-lucide="headphones"></i></div>
+            <h3 class="mt-6 text-2xl font-bold">Customer support</h3>
+            <p class="mt-3 text-slate-500 leading-7">Answer questions, solve problems and give visitors a direct path to your team.</p>
+          </div>
+          <div class="group reveal rounded-3xl border border-slate-200 p-8 hover:border-cyan-200 hover:shadow-card transition">
+            <div class="w-14 h-14 rounded-2xl bg-cyan-50 text-cyan-600 grid place-items-center group-hover:scale-110 transition"><i data-lucide="trending-up"></i></div>
+            <h3 class="mt-6 text-2xl font-bold">Sales conversations</h3>
+            <p class="mt-3 text-slate-500 leading-7">Turn questions from interested visitors into helpful conversations with your team.</p>
+          </div>
+          <div class="group reveal rounded-3xl border border-slate-200 p-8 hover:border-emerald-200 hover:shadow-card transition">
+            <div class="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-600 grid place-items-center group-hover:scale-110 transition"><i data-lucide="heart-handshake"></i></div>
+            <h3 class="mt-6 text-2xl font-bold">Service teams</h3>
+            <p class="mt-3 text-slate-500 leading-7">Give your customers a consistent and approachable way to reach your business.</p>
+          </div>
+        </div>
+      </div>
+    </section>
 
-        <div class="glass rounded-2xl p-7 hover:-translate-y-2 hover:border-sky-400/20 transition duration-500">
+    <!-- CTA -->
+    <section class="py-24 bg-slate-50">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-indigo-600 via-violet-600 to-slate-950 p-8 sm:p-14 text-white text-center shadow-soft">
+          <div class="absolute -top-20 -left-20 w-64 h-64 rounded-full bg-white/10 blur-3xl"></div>
+          <div class="absolute -bottom-24 -right-20 w-72 h-72 rounded-full bg-cyan-300/10 blur-3xl"></div>
+          <div class="relative reveal">
+            <div class="mx-auto w-14 h-14 rounded-2xl bg-white/10 grid place-items-center"><i data-lucide="messages-square"></i></div>
+            <h2 class="mt-6 text-4xl sm:text-5xl font-extrabold">Ready to make conversations flow?</h2>
+            <p class="mt-5 text-indigo-100 text-lg max-w-2xl mx-auto">Create your FlowChat workspace and build a more connected customer experience.</p>
+            <a href="login.php" class="mt-8 inline-flex items-center gap-2 px-7 py-3.5 rounded-xl bg-white text-indigo-700 font-bold hover:-translate-y-1 transition shadow-xl">
+              Get Started
+              <i data-lucide="arrow-right" class="w-5 h-5"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
 
-            <div class="w-12 h-12 rounded-xl bg-violet-500/10 flex items-center justify-center mb-6">
-                <i data-lucide="users" class="text-violet-400"></i>
-            </div>
-
-            <h3 class="text-lg font-semibold">
-                Team inbox
-            </h3>
-
-            <p class="mt-3 text-sm text-slate-500 leading-6">
-                Keep every customer conversation organized in one place.
-            </p>
-
+    <!-- FAQ -->
+    <section id="faq" class="py-24 bg-white">
+      <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center reveal">
+          <span class="text-sm font-bold text-indigo-600 uppercase tracking-wider">FAQ</span>
+          <h2 class="mt-3 text-4xl font-extrabold">Questions, answered.</h2>
         </div>
 
-    </div>
-
-</div>
-
-
-</section>
-
-<!-- ================= HOW IT WORKS ================= -->
-
-<section id="how" class="py-24 bg-white/[.015] border-y border-white/5">
-
-
-<div class="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10">
-
-    <div class="text-center mb-16">
-
-        <div class="text-sky-400 text-sm font-semibold uppercase tracking-widest">
-            How it works
+        <div class="mt-10 space-y-3">
+          <details class="group rounded-2xl border border-slate-200 p-5">
+            <summary class="cursor-pointer list-none flex items-center justify-between font-bold">What is FlowChat? <i data-lucide="chevron-down" class="w-5 h-5 group-open:rotate-180 transition"></i></summary>
+            <p class="mt-3 text-slate-500 leading-7">FlowChat is a live chat experience designed to connect website visitors with your support or sales team.</p>
+          </details>
+          <details class="group rounded-2xl border border-slate-200 p-5">
+            <summary class="cursor-pointer list-none flex items-center justify-between font-bold">Does Get Started open the login page? <i data-lucide="chevron-down" class="w-5 h-5 group-open:rotate-180 transition"></i></summary>
+            <p class="mt-3 text-slate-500 leading-7">Yes. Every main Get Started call-to-action on this page links directly to <strong>login.php</strong>.</p>
+          </details>
+          <details class="group rounded-2xl border border-slate-200 p-5">
+            <summary class="cursor-pointer list-none flex items-center justify-between font-bold">Can I use the live preview without logging in? <i data-lucide="chevron-down" class="w-5 h-5 group-open:rotate-180 transition"></i></summary>
+            <p class="mt-3 text-slate-500 leading-7">Yes. The Try Live Preview button opens the demonstration chat directly on the page.</p>
+          </details>
         </div>
+      </div>
+    </section>
+  </main>
 
-        <h2 class="text-3xl sm:text-4xl font-bold mt-3">
-            Start chatting in three steps.
-        </h2>
-
-    </div>
-
-
-    <div class="grid md:grid-cols-3 gap-6">
-
-        <div class="glass rounded-2xl p-7">
-
-            <div class="text-sky-400 font-bold text-xl mb-5">
-                01
-            </div>
-
-            <h3 class="text-xl font-semibold">
-                Customer opens chat
-            </h3>
-
-            <p class="text-sm text-slate-500 leading-6 mt-3">
-                Visitors click your FlowChat widget directly from your website.
-            </p>
-
-        </div>
-
-
-        <div class="glass rounded-2xl p-7">
-
-            <div class="text-sky-400 font-bold text-xl mb-5">
-                02
-            </div>
-
-            <h3 class="text-xl font-semibold">
-                Message your team
-            </h3>
-
-            <p class="text-sm text-slate-500 leading-6 mt-3">
-                Their conversation instantly enters your FlowChat dashboard.
-            </p>
-
-        </div>
-
-
-        <div class="glass rounded-2xl p-7">
-
-            <div class="text-sky-400 font-bold text-xl mb-5">
-                03
-            </div>
-
-            <h3 class="text-xl font-semibold">
-                Start helping
-            </h3>
-
-            <p class="text-sm text-slate-500 leading-6 mt-3">
-                Your support team responds and keeps the conversation flowing.
-            </p>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-</section>
-
-<!-- ================= CTA ================= -->
-
-<section class="py-24 sm:py-32">
-
-
-<div class="max-w-5xl mx-auto px-5 sm:px-8">
-
-    <div class="rounded-3xl border border-sky-400/10 bg-gradient-to-br from-sky-500/10 via-blue-500/5 to-transparent p-8 sm:p-14 text-center">
-
-        <div class="w-14 h-14 mx-auto rounded-2xl bg-sky-500 flex items-center justify-center shadow-xl shadow-sky-500/20">
-
-            <i data-lucide="message-circle" class="w-7 h-7"></i>
-
-        </div>
-
-        <h2 class="mt-7 text-3xl sm:text-4xl font-bold">
-            See how your customers will experience FlowChat.
-        </h2>
-
-        <p class="mt-4 text-slate-400 max-w-xl mx-auto leading-7">
-            Click below and open the interactive customer chat preview.
-        </p>
-
-        <button onclick="openChat()"
-                class="mt-8 px-7 py-3.5 rounded-xl bg-white text-slate-950 font-semibold hover:bg-sky-50 hover:-translate-y-1 transition duration-300">
-
-            Open Live Chat Preview
-
-        </button>
-
-    </div>
-
-</div>
-
-
-</section>
-
-<!-- ================= FOOTER ================= -->
-
-<footer id="about" class="border-t border-white/5">
-
-
-<div class="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 py-10 flex flex-col md:flex-row items-center justify-between gap-5">
-
-    <div class="flex items-center gap-3">
-
-        <div class="w-9 h-9 rounded-lg bg-sky-500 flex items-center justify-center">
-            <i data-lucide="message-circle" class="w-4 h-4"></i>
-        </div>
-
+  <!-- FOOTER -->
+  <footer class="bg-slate-950 text-slate-400">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-8">
         <div>
-            <div class="font-semibold">
-                FlowChat
-            </div>
-
-            <div class="text-xs text-slate-600">
-                Better conversations.
-            </div>
+          <div class="flex items-center gap-2.5 text-white">
+            <div class="w-9 h-9 rounded-xl bg-indigo-600 grid place-items-center"><i data-lucide="messages-square" class="w-4 h-4"></i></div>
+            <span class="font-extrabold text-xl">FlowChat</span>
+          </div>
+          <p class="mt-3 max-w-md text-sm leading-6">Professional live chat for better customer conversations.</p>
         </div>
+        <div class="flex flex-wrap gap-x-6 gap-y-3 text-sm">
+          <a href="#features" class="hover:text-white transition">Features</a>
+          <a href="#how-it-works" class="hover:text-white transition">How it works</a>
+          <a href="#faq" class="hover:text-white transition">FAQ</a>
+          <a href="login.php" class="hover:text-white transition">Login</a>
+        </div>
+      </div>
+      <div class="mt-10 pt-6 border-t border-white/10 text-xs flex flex-col sm:flex-row justify-between gap-2">
+        <span>© 2026 FlowChat. All rights reserved.</span>
+        <span>Built for better conversations.</span>
+      </div>
+    </div>
+  </footer>
 
+  <!-- FLOATING CHAT -->
+  <button id="chatLauncher" onclick="openLiveChat()" class="fixed bottom-5 right-5 z-40 w-14 h-14 rounded-2xl bg-indigo-600 text-white grid place-items-center shadow-2xl shadow-indigo-600/30 hover:scale-105 transition" aria-label="Open live chat">
+    <i data-lucide="message-circle"></i>
+    <span class="absolute -top-1 -right-1 w-4 h-4 bg-emerald-400 border-2 border-white rounded-full"></span>
+  </button>
+
+  <!-- CHAT MODAL -->
+  <div id="chatOverlay" class="hidden fixed inset-0 z-[60] bg-slate-950/40 backdrop-blur-sm"></div>
+  <div id="liveChat" class="hidden fixed z-[70] bottom-5 right-5 w-[calc(100%-2rem)] sm:w-[390px] h-[min(680px,calc(100vh-2rem))] bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-200 flex-col">
+    <div class="bg-indigo-600 text-white px-5 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="relative w-10 h-10 rounded-full bg-white/15 grid place-items-center">
+          <i data-lucide="messages-square" class="w-5 h-5"></i>
+          <span class="absolute bottom-0 right-0 w-3 h-3 bg-emerald-300 border-2 border-indigo-600 rounded-full"></span>
+        </div>
+        <div>
+          <div class="font-bold">FlowChat Support</div>
+          <div class="text-xs text-indigo-100">Usually replies quickly</div>
+        </div>
+      </div>
+      <button onclick="closeLiveChat()" class="p-2 rounded-xl hover:bg-white/10 transition" aria-label="Close chat"><i data-lucide="x"></i></button>
     </div>
 
-
-    <div class="text-xs text-slate-600">
-        © <span id="year"></span> FlowChat. All rights reserved.
+    <div id="chatMessages" class="flex-1 overflow-y-auto p-4 bg-slate-50 space-y-3">
+      <div class="text-center text-[11px] text-slate-400 py-2">Today</div>
+      <div class="max-w-[82%] bg-white border border-slate-200 rounded-2xl rounded-tl-md p-3 shadow-sm">
+        <p class="text-sm text-slate-700">Hi! 👋 Welcome to FlowChat. How can we help?</p>
+        <p class="mt-1 text-[10px] text-slate-400">Just now</p>
+      </div>
+      <div id="typing" class="hidden max-w-fit bg-white border border-slate-200 rounded-2xl px-3 py-2 text-xs text-slate-400">
+        <span class="typing">Typing <span>•</span><span>•</span><span>•</span></span>
+      </div>
     </div>
 
-</div>
-
-
-</footer>
-
-<!-- =========================================================
-     FLOATING FLOWCHAT BUTTON
-========================================================= -->
-
-<button id="floatingChat"
-     onclick="openChat()"
-     class="fixed bottom-5 right-5 sm:bottom-7 sm:right-7 z-50 w-15 h-15 min-w-[60px] min-h-[60px] rounded-full bg-gradient-to-br from-sky-400 to-blue-600 shadow-2xl shadow-sky-500/30 flex items-center justify-center hover:scale-110 transition duration-300">
-
-
-<i data-lucide="message-circle" class="w-7 h-7"></i>
-
-<span class="absolute top-1 right-1 w-3.5 h-3.5 bg-emerald-400 border-2 border-[#050b14] rounded-full animate-pulse"></span>
-
-
-</button>
-
-<!-- =========================================================
-     FLOWCHAT LIVE PREVIEW WIDGET
-========================================================= -->
-
-<div id="chatWidget"
-     class="chat-widget fixed bottom-5 right-5 sm:bottom-7 sm:right-7 z-[100] w-[390px] max-w-[calc(100vw-24px)] h-[620px] max-h-[calc(100vh-40px)] bg-[#0b1420] border border-white/10 rounded-[26px] overflow-hidden flex-col shadow-2xl shadow-black/50">
-
-
-<!-- CHAT HEADER -->
-
-<div class="relative px-5 py-4 bg-gradient-to-r from-sky-500 to-blue-600">
-
-    <div class="absolute inset-0 bg-white/[.03]"></div>
-
-    <div class="relative flex items-center justify-between">
-
-        <div class="flex items-center gap-3">
-
-            <div class="relative">
-
-                <div class="w-11 h-11 rounded-full bg-white/20 border border-white/20 backdrop-blur flex items-center justify-center font-bold">
-                    FC
-                </div>
-
-                <span class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-400 border-2 border-sky-500 rounded-full"></span>
-
-            </div>
-
-
-            <div>
-
-                <div class="font-semibold">
-                    FlowChat Support
-                </div>
-
-                <div class="flex items-center gap-1.5 text-xs text-white/80 mt-0.5">
-
-                    <span class="w-1.5 h-1.5 bg-emerald-300 rounded-full"></span>
-
-                    Typically replies instantly
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="flex items-center gap-1">
-
-            <button class="w-9 h-9 rounded-xl hover:bg-white/10 flex items-center justify-center transition">
-
-                <i data-lucide="more-horizontal" class="w-5 h-5"></i>
-
-            </button>
-
-
-            <button onclick="closeChat()"
-                    class="w-9 h-9 rounded-xl hover:bg-white/10 flex items-center justify-center transition">
-
-                <i data-lucide="x" class="w-5 h-5"></i>
-
-            </button>
-
-        </div>
-
+    <div class="px-4 py-2 flex gap-2 overflow-x-auto border-t bg-white">
+      <button onclick="quickReply('How does FlowChat work?')" class="shrink-0 px-3 py-1.5 rounded-full bg-slate-100 text-xs font-medium hover:bg-indigo-50 hover:text-indigo-600">How does it work?</button>
+      <button onclick="quickReply('I want to get started')" class="shrink-0 px-3 py-1.5 rounded-full bg-slate-100 text-xs font-medium hover:bg-indigo-50 hover:text-indigo-600">Get started</button>
     </div>
 
-</div>
-
-
-
-<!-- CHAT MESSAGES -->
-
-<div id="chatMessages"
-     class="chat-scroll flex-1 overflow-y-auto p-5 space-y-5 bg-[#0b1420]">
-
-
-    <!-- DATE -->
-
-    <div class="text-center">
-
-        <span class="px-3 py-1 rounded-full bg-white/[.05] text-[10px] tracking-wide text-slate-500">
-            TODAY
-        </span>
-
+    <div class="p-3 border-t bg-white flex items-center gap-2">
+      <button class="w-10 h-10 shrink-0 rounded-xl bg-slate-100 grid place-items-center hover:bg-slate-200"><i data-lucide="paperclip" class="w-4 h-4"></i></button>
+      <button class="w-10 h-10 shrink-0 rounded-xl bg-slate-100 grid place-items-center hover:bg-slate-200"><i data-lucide="smile" class="w-4 h-4"></i></button>
+      <input id="chatInput" type="text" placeholder="Write a message..." class="min-w-0 flex-1 h-10 rounded-xl bg-slate-100 px-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200">
+      <button onclick="sendMessage()" class="w-10 h-10 shrink-0 rounded-xl bg-indigo-600 text-white grid place-items-center hover:bg-indigo-700"><i data-lucide="send" class="w-4 h-4"></i></button>
     </div>
+  </div>
 
-
-    <!-- WELCOME -->
-
-    <div class="flex gap-3 message-enter">
-
-        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-sky-400 to-blue-600 flex items-center justify-center text-[9px] font-bold shrink-0">
-            FC
-        </div>
-
-        <div class="max-w-[78%]">
-
-            <div class="bg-white/[.07] border border-white/[.04] rounded-2xl rounded-tl-md px-4 py-3 text-sm text-slate-200 leading-6">
-
-                👋 Hi there! Welcome to FlowChat.
-
-                <br><br>
-
-                How can we help you today?
-
-            </div>
-
-            <div class="text-[10px] text-slate-600 mt-1.5">
-                FlowChat Support · Now
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- QUICK REPLIES -->
-
-    <div id="quickReplies"
-         class="pl-11 flex flex-wrap gap-2 message-enter">
-
-        <button onclick="quickMessage('I need help with my account')"
-                class="px-3 py-2 rounded-xl border border-sky-400/20 bg-sky-400/5 text-xs text-sky-300 hover:bg-sky-400/10 transition">
-
-            I need help
-
-        </button>
-
-
-        <button onclick="quickMessage('I want to learn more about your service')"
-                class="px-3 py-2 rounded-xl border border-sky-400/20 bg-sky-400/5 text-xs text-sky-300 hover:bg-sky-400/10 transition">
-
-            Learn more
-
-        </button>
-
-    </div>
-
-
-    <!-- TYPING -->
-
-    <div id="typingIndicator"
-         class="hidden items-center gap-3">
-
-        <div class="w-8 h-8 rounded-full bg-sky-500 flex items-center justify-center text-[9px] font-bold">
-            FC
-        </div>
-
-        <div class="bg-white/[.06] rounded-2xl px-4 py-3">
-
-            <div class="flex gap-1">
-
-                <span class="w-1.5 h-1.5 rounded-full bg-slate-400 animate-typing"></span>
-
-                <span class="w-1.5 h-1.5 rounded-full bg-slate-400 animate-typing"
-                      style="animation-delay:.2s"></span>
-
-                <span class="w-1.5 h-1.5 rounded-full bg-slate-400 animate-typing"
-                      style="animation-delay:.4s"></span>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-
-<!-- INPUT AREA -->
-
-<div class="p-4 border-t border-white/10 bg-[#0c1724]">
-
-    <div class="flex items-end gap-2">
-
-        <button class="w-10 h-10 shrink-0 rounded-xl hover:bg-white/[.06] text-slate-500 hover:text-sky-400 flex items-center justify-center transition">
-
-            <i data-lucide="paperclip" class="w-5 h-5"></i>
-
-        </button>
-
-
-        <div class="flex-1 bg-white/[.05] border border-white/[.06] rounded-2xl flex items-center px-3 min-h-[46px]">
-
-            <input id="messageInput"
-                   type="text"
-                   placeholder="Write a message..."
-                   class="w-full bg-transparent outline-none text-sm text-white placeholder:text-slate-600 py-3">
-
-            <button class="text-slate-500 hover:text-yellow-400 transition">
-
-                <i data-lucide="smile" class="w-5 h-5"></i>
-
-            </button>
-
-        </div>
-
-
-        <button id="sendButton"
-                class="w-11 h-11 shrink-0 rounded-xl bg-sky-500 hover:bg-sky-400 disabled:opacity-40 flex items-center justify-center shadow-lg shadow-sky-500/20 transition">
-
-            <i data-lucide="send" class="w-5 h-5"></i>
-
-        </button>
-
-    </div>
-
-
-    <div class="flex items-center justify-between mt-3 px-1">
-
-        <div class="text-[10px] text-slate-600">
-            Press Enter to send
-        </div>
-
-        <div class="flex items-center gap-1.5 text-[10px] text-slate-600">
-
-            <i data-lucide="shield-check" class="w-3 h-3"></i>
-
-            Powered by FlowChat
-
-        </div>
-
-    </div>
-
-</div>
-
-
-</div>
-
-<script>
-
+  <script>
     lucide.createIcons();
 
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    menuBtn?.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
 
-    /* YEAR */
-
-    document.getElementById('year').textContent =
-        new Date().getFullYear();
-
-
-    /* MOBILE MENU */
-
-    const menuButton =
-        document.getElementById('menuButton');
-
-    const mobileMenu =
-        document.getElementById('mobileMenu');
-
-
-    menuButton.addEventListener('click', function () {
-
-        mobileMenu.classList.toggle('open');
-
+    document.querySelectorAll('#mobileMenu a').forEach(a => {
+      a.addEventListener('click', () => mobileMenu.classList.add('hidden'));
     });
 
+    const overlay = document.getElementById('chatOverlay');
+    const chat = document.getElementById('liveChat');
+    const messages = document.getElementById('chatMessages');
+    const input = document.getElementById('chatInput');
+    const typing = document.getElementById('typing');
 
-
-    /* CHAT */
-
-    const chatWidget =
-        document.getElementById('chatWidget');
-
-    const floatingChat =
-        document.getElementById('floatingChat');
-
-    const messageInput =
-        document.getElementById('messageInput');
-
-    const sendButton =
-        document.getElementById('sendButton');
-
-    const chatMessages =
-        document.getElementById('chatMessages');
-
-    const typingIndicator =
-        document.getElementById('typingIndicator');
-
-
-    function openChat() {
-
-        chatWidget.classList.add('show');
-
-        floatingChat.style.display = 'none';
-
-        mobileMenu.classList.remove('open');
-
-        setTimeout(function () {
-
-            messageInput.focus();
-
-        }, 350);
-
+    function openLiveChat() {
+      overlay.classList.remove('hidden');
+      chat.classList.remove('hidden');
+      chat.classList.add('flex');
+      setTimeout(() => input.focus(), 100);
     }
 
-
-    function closeChat() {
-
-        chatWidget.classList.remove('show');
-
-        floatingChat.style.display = 'flex';
-
+    function closeLiveChat() {
+      overlay.classList.add('hidden');
+      chat.classList.add('hidden');
+      chat.classList.remove('flex');
     }
 
+    overlay.addEventListener('click', closeLiveChat);
 
-
-    /* SEND MESSAGE */
+    function addMessage(text, mine = false) {
+      const bubble = document.createElement('div');
+      bubble.className = mine
+        ? 'ml-auto max-w-[82%] bg-indigo-600 text-white rounded-2xl rounded-tr-md p-3 shadow-sm'
+        : 'max-w-[82%] bg-white border border-slate-200 rounded-2xl rounded-tl-md p-3 shadow-sm';
+      bubble.innerHTML = `<p class="text-sm">${escapeHtml(text)}</p><p class="mt-1 text-[10px] ${mine ? 'text-indigo-100' : 'text-slate-400'}">Just now</p>`;
+      messages.insertBefore(bubble, typing);
+      messages.scrollTop = messages.scrollHeight;
+    }
 
     function sendMessage() {
+      const text = input.value.trim();
+      if (!text) return;
+      addMessage(text, true);
+      input.value = '';
+      typing.classList.remove('hidden');
+      messages.scrollTop = messages.scrollHeight;
 
-        const message =
-            messageInput.value.trim();
-
-
-        if (!message) return;
-
-
-        addUserMessage(message);
-
-
-        messageInput.value = '';
-
-
-        document
-            .getElementById('quickReplies')
-            .style.display = 'none';
-
-
-        showTyping();
-
-
-        setTimeout(function () {
-
-            hideTyping();
-
-            addAgentMessage(
-                "Thanks for your message! 👋 This is a preview of how FlowChat will look on your customer's website. The real system will connect your message directly to a support agent."
-            );
-
-        }, 1400);
-
+      setTimeout(() => {
+        typing.classList.add('hidden');
+        addMessage("Thanks for your message! This is the FlowChat live preview. .");
+      }, 900);
     }
 
-
-
-    /* ADD CUSTOMER MESSAGE */
-
-    function addUserMessage(message) {
-
-        const messageElement =
-            document.createElement('div');
-
-
-        messageElement.className =
-            'flex justify-end message-enter';
-
-
-        messageElement.innerHTML = `
-
-            <div class="max-w-[78%]">
-
-                <div class="bg-sky-500 rounded-2xl rounded-tr-md px-4 py-3 text-sm leading-6 shadow-lg shadow-sky-500/10">
-                    ${escapeHTML(message)}
-                </div>
-
-                <div class="text-[10px] text-slate-600 mt-1.5 text-right">
-                    Just now
-                </div>
-
-            </div>
-
-        `;
-
-
-        chatMessages.insertBefore(
-            messageElement,
-            typingIndicator
-        );
-
-
-        scrollChat();
-
+    function quickReply(text) {
+      input.value = text;
+      sendMessage();
     }
 
-
-
-    /* ADD AGENT MESSAGE */
-
-    function addAgentMessage(message) {
-
-        const messageElement =
-            document.createElement('div');
-
-
-        messageElement.className =
-            'flex gap-3 message-enter';
-
-
-        messageElement.innerHTML = `
-
-            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-sky-400 to-blue-600 flex items-center justify-center text-[9px] font-bold shrink-0">
-                FC
-            </div>
-
-            <div class="max-w-[78%]">
-
-                <div class="bg-white/[.07] border border-white/[.04] rounded-2xl rounded-tl-md px-4 py-3 text-sm text-slate-200 leading-6">
-                    ${escapeHTML(message)}
-                </div>
-
-                <div class="text-[10px] text-slate-600 mt-1.5">
-                    FlowChat Support · Just now
-                </div>
-
-            </div>
-
-        `;
-
-
-        chatMessages.insertBefore(
-            messageElement,
-            typingIndicator
-        );
-
-
-        scrollChat();
-
-    }
-
-
-
-    /* QUICK MESSAGE */
-
-    function quickMessage(message) {
-
-        messageInput.value = message;
-
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
         sendMessage();
+      }
+    });
 
+    function escapeHtml(value) {
+      const div = document.createElement('div');
+      div.textContent = value;
+      return div.innerHTML;
     }
 
-
-
-    /* TYPING */
-
-    function showTyping() {
-
-        typingIndicator.classList.remove('hidden');
-
-        typingIndicator.classList.add('flex');
-
-        scrollChat();
-
-    }
-
-
-    function hideTyping() {
-
-        typingIndicator.classList.add('hidden');
-
-        typingIndicator.classList.remove('flex');
-
-    }
-
-
-
-    /* SCROLL */
-
-    function scrollChat() {
-
-        setTimeout(function () {
-
-            chatMessages.scrollTop =
-                chatMessages.scrollHeight;
-
-        }, 100);
-
-    }
-
-
-
-    /* ESCAPE HTML */
-
-    function escapeHTML(text) {
-
-        const div =
-            document.createElement('div');
-
-        div.textContent = text;
-
-        return div.innerHTML;
-
-    }
-
-
-
-    /* BUTTON SEND */
-
-    sendButton.addEventListener(
-        'click',
-        sendMessage
-    );
-
-
-    /* ENTER SEND */
-
-    messageInput.addEventListener(
-        'keydown',
-        function (event) {
-
-            if (event.key === 'Enter') {
-
-                event.preventDefault();
-
-                sendMessage();
-
-            }
-
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('show');
+          observer.unobserve(entry.target);
         }
-    );
+      });
+    }, { threshold: .12 });
 
-</script>
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
+    // Close mobile menu when resizing to desktop
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 640) mobileMenu.classList.add('hidden');
+    });
+  </script>
 </body>
 </html>
